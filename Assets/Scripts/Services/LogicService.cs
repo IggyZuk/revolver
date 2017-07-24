@@ -3,7 +3,6 @@
     public static void Tick(World model)
     {
         model.tickNum++;
-        UnityEngine.Debug.Log(model.tickNum);
 
         TickBandits(model);
         TickBullets(model);
@@ -15,14 +14,15 @@
     {
         if (model.tickNum >= model.nextBanditSpawnTick)
         {
-            model.nextBanditSpawnTick = model.tickNum + 50;
+            model.nextBanditSpawnTick = model.tickNum + 10;
             SpawnBandit(model);
         }
 
-        foreach (var b in model.bandits)
+        foreach (var bandit in model.bandits)
         {
-            b.pos += b.dir * 0.1f;
-            b.tickLife--;
+            bandit.pos += bandit.dir * bandit.speed;
+            bandit.tickLife--;
+            if (bandit.tickLife <= 0) bandit.isActive = false;
         }
     }
 
@@ -36,10 +36,29 @@
 
     public static void TickBullets(World model)
     {
-        foreach (var b in model.bullets)
+        foreach (var bullet in model.bullets)
         {
-            b.pos += b.dir * 0.1f;
-            b.tickLife--;
+            bullet.pos += bullet.dir * bullet.speed;
+            bullet.tickLife--;
+            if (bullet.tickLife <= 0) bullet.isActive = false;
+
+            foreach (var bandit in model.bandits)
+            {
+                Position delta = bullet.pos - bandit.pos;
+                float allowedDistance = bullet.radius + bandit.radius;
+                float distance = delta.Magnitude();
+                if (distance < allowedDistance)
+                {
+                    bandit.isActive = false;
+
+                    Position normal = delta.Normalize();
+                    Position hitPoint = bandit.pos + normal * allowedDistance;
+                    model.gizmos.Add(hitPoint);
+
+                    bullet.pos = hitPoint;
+                    bullet.dir = (bullet.dir * 0.5f + delta.Normalize() * 0.75f).Normalize();
+                }
+            }
         }
     }
 
@@ -53,15 +72,20 @@
         model.bullets.Add(b);
     }
 
+	public static void ShootSuperBullet(World model)
+	{
+        foreach (var bandit in model.bandits)
+        {
+            ShootBullet(model, bandit.pos);
+        }
+    }
+
     public static void RemoveBullets(World model)
     {
         for (int i = model.bullets.Count - 1; i >= 0; i--)
         {
             Bullet b = model.bullets[i];
-            if (b.tickLife <= 0)
-            {
-                model.bullets.Remove(b);
-            }
+            if (!b.isActive) model.bullets.Remove(b);
         }
     }
 
@@ -70,10 +94,7 @@
         for (int i = model.bandits.Count - 1; i >= 0; i--)
         {
             Bandit b = model.bandits[i];
-            if (b.tickLife <= 0)
-            {
-                model.bandits.Remove(b);
-            }
+            if (!b.isActive) model.bandits.Remove(b);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 
 public class World
 {
@@ -7,4 +7,5 @@ public class World
     public List<Bandit> bandits = new List<Bandit>();
     public List<Bullet> bullets = new List<Bullet>();
     public int nextBanditSpawnTick = 0;
+    public List<Position> gizmos = new List<Position>();
 }
