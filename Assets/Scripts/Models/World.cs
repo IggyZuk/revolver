@@ -9,4 +9,5 @@ public class World
 	public int nextBanditSpawnTick = 0;
     public int nextBanditMoveTick = 0;
     public List<Position> gizmos = new List<Position>();
+    public int bulletHitsScore = 0;
 }

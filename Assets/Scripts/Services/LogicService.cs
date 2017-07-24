@@ -61,6 +61,8 @@
 
                     bullet.pos = hitPoint;
                     bullet.dir = (bullet.dir * 0.5f + delta.Normalize() * 0.75f).Normalize();
+
+                    bullet.hits++;
                 }
             }
         }
@@ -76,11 +78,11 @@
         b.radius = model.player.nextBulletRadius;
         model.bullets.Add(b);
 
-		model.player.nextBulletRadius = UnityEngine.Random.Range(0.1f, 0.2f);
+        model.player.nextBulletRadius = UnityEngine.Random.Range(0.1f, 0.2f);
     }
 
-	public static void ShootSuperBullet(World model)
-	{
+    public static void ShootSuperBullet(World model)
+    {
         foreach (var bandit in model.bandits)
         {
             ShootBullet(model, bandit.pos);
@@ -92,7 +94,15 @@
         for (int i = model.bullets.Count - 1; i >= 0; i--)
         {
             Bullet b = model.bullets[i];
-            if (!b.isActive) model.bullets.Remove(b);
+            if (!b.isActive)
+            {
+                if (b.hits > model.bulletHitsScore)
+                {
+                    model.bulletHitsScore = b.hits;
+                    Logger.Log("New Score: " + model.bulletHitsScore);
+                }
+                model.bullets.Remove(b);
+            }
         }
     }
 
@@ -105,24 +115,25 @@
         }
     }
 
-    public static World CloneWorldWithoutBullets(World original) {
+    public static World CloneWorldWithoutBullets(World original)
+    {
         World clone = new World();
         clone.tickNum = original.tickNum;
-		clone.player.pos = original.player.pos;
-		clone.player.dir = original.player.dir;
+        clone.player.pos = original.player.pos;
+        clone.player.dir = original.player.dir;
         clone.player.nextBulletRadius = original.player.nextBulletRadius;
-		clone.nextBanditSpawnTick = original.nextBanditSpawnTick;
+        clone.nextBanditSpawnTick = original.nextBanditSpawnTick;
         clone.nextBanditMoveTick = original.nextBanditMoveTick;
 
         foreach (var originalBandit in original.bandits)
-		{
+        {
             Bandit b = new Bandit();
-			b.isActive = originalBandit.isActive;
-			b.pos = originalBandit.pos;
-			b.dir = originalBandit.dir;
-			b.tickLife = originalBandit.tickLife;
+            b.isActive = originalBandit.isActive;
+            b.pos = originalBandit.pos;
+            b.dir = originalBandit.dir;
+            b.tickLife = originalBandit.tickLife;
             clone.bandits.Add(b);
-		}
+        }
 
         return clone;
     }
