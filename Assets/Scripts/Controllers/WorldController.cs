@@ -7,7 +7,7 @@ public class WorldController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             LogicService.ShootBullet(
