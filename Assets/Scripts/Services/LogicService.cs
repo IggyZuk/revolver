@@ -14,15 +14,19 @@
     {
         if (model.tickNum >= model.nextBanditSpawnTick)
         {
-            model.nextBanditSpawnTick = model.tickNum + 10;
+            model.nextBanditSpawnTick = model.tickNum + 25;
             SpawnBandit(model);
         }
 
-        foreach (var bandit in model.bandits)
+        if (model.tickNum >= model.nextBanditMoveTick)
         {
-            bandit.pos += bandit.dir * bandit.speed;
-            bandit.tickLife--;
-            if (bandit.tickLife <= 0) bandit.isActive = false;
+            model.nextBanditMoveTick = model.tickNum + 400;
+            foreach (var bandit in model.bandits)
+            {
+                bandit.pos += bandit.dir * bandit.speed;
+                bandit.tickLife--;
+                if (bandit.tickLife <= 0) bandit.isActive = false;
+            }
         }
     }
 
@@ -69,7 +73,10 @@
         Bullet b = new Bullet();
         b.pos = model.player.pos;
         b.dir = model.player.dir;
+        b.radius = model.player.nextBulletRadius;
         model.bullets.Add(b);
+
+		model.player.nextBulletRadius = UnityEngine.Random.Range(0.1f, 0.2f);
     }
 
 	public static void ShootSuperBullet(World model)
@@ -96,5 +103,27 @@
             Bandit b = model.bandits[i];
             if (!b.isActive) model.bandits.Remove(b);
         }
+    }
+
+    public static World CloneWorldWithoutBullets(World original) {
+        World clone = new World();
+        clone.tickNum = original.tickNum;
+		clone.player.pos = original.player.pos;
+		clone.player.dir = original.player.dir;
+        clone.player.nextBulletRadius = original.player.nextBulletRadius;
+		clone.nextBanditSpawnTick = original.nextBanditSpawnTick;
+        clone.nextBanditMoveTick = original.nextBanditMoveTick;
+
+        foreach (var originalBandit in original.bandits)
+		{
+            Bandit b = new Bandit();
+			b.isActive = originalBandit.isActive;
+			b.pos = originalBandit.pos;
+			b.dir = originalBandit.dir;
+			b.tickLife = originalBandit.tickLife;
+            clone.bandits.Add(b);
+		}
+
+        return clone;
     }
 }

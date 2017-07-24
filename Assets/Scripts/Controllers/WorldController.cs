@@ -7,7 +7,7 @@ public class WorldController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
         {
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             LogicService.ShootBullet(
@@ -15,10 +15,10 @@ public class WorldController : MonoBehaviour
                 new Position(worldPos.x, worldPos.z)
             );
         }
-		if (Input.GetMouseButtonDown(1))
-		{
-			LogicService.ShootSuperBullet(model);
-		}
+        if (Input.GetMouseButtonUp(1))
+        {
+            LogicService.ShootSuperBullet(model);
+        }
     }
 
     void FixedUpdate()
@@ -51,9 +51,31 @@ public class WorldController : MonoBehaviour
 
         foreach (var g in model.gizmos)
         {
-			Gizmos.color = Color.black;
-			Gizmos.DrawSphere(g.Vector3(), 0.1f);
+            Gizmos.color = Color.black;
+            Gizmos.DrawSphere(g.Vector3(), 0.1f);
         }
         model.gizmos.Clear();
+
+        World clone = LogicService.CloneWorldWithoutBullets(model);
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        LogicService.ShootBullet(
+            clone,
+            new Position(worldPos.x, worldPos.z)
+        );
+        int steps = 16;
+        for (int i = 0; i < steps; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                LogicService.Tick(clone);
+            }
+
+			foreach (var b in clone.bullets)
+			{
+				Gizmos.color = new Color(0f, 0f, 1f, 1f - (float)i / steps);
+				Gizmos.DrawWireSphere(b.pos.Vector3(), b.radius);
+				Gizmos.DrawLine(b.pos.Vector3(), b.pos.Vector3() + b.dir.Vector3());
+			}
+        }
     }
 }
