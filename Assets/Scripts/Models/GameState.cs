@@ -2,5 +2,6 @@ public enum GameState
 {
 	PlayerTurn,
 	Animation,
-	EnemyTurn
+	EnemyTurn,
+	GameOver
 }

@@ -15,6 +15,11 @@
 
 			case GameState.EnemyTurn:
 				TickBandits(model);
+				break;
+			case GameState.GameOver:
+				model.player.revolver.bullets = Config.MAGAZINE_SIZE;
+				model.bandits.Clear();
+				model.bandits.Clear();
 				model.gameState = GameState.PlayerTurn;
 				break;
 		}
@@ -22,22 +27,25 @@
 
 	public static void TickBandits(World model)
 	{
-		if (model.tickNum >= model.nextBanditSpawnTick)
-		{
-			model.nextBanditSpawnTick = model.tickNum + 2;
+		GameState state = GameState.PlayerTurn;
 
-			for (int i = 0; i < 5; i++)
-			{
-				SpawnBandit(model);
-			}
+		for (int i = 0; i < Config.SPAWN_BANDIT_COUNT; i++)
+		{
+			SpawnBandit(model);
 		}
 
 		foreach (var bandit in model.bandits)
 		{
 			bandit.pos += bandit.dir * bandit.speed;
-			bandit.tickLife--;
-			if (bandit.tickLife <= 0) bandit.isActive = false;
+			bandit.turnsTillShoot--;
+			if (bandit.turnsTillShoot <= 0)
+			{
+				bandit.isActive = false;
+				state = GameState.GameOver;
+			}
 		}
+
+		model.gameState = state;
 	}
 
 	public static void SpawnBandit(World model)
@@ -81,14 +89,25 @@
 
 	public static void ShootBullet(World model, Position clickedWorldPos)
 	{
-		model.player.dir = (clickedWorldPos - model.player.pos).Normalize();
+		if (model.player.revolver.bullets > 0)
+		{
+			model.player.revolver.bullets--;
 
-		Bullet b = new Bullet();
-		b.pos = model.player.pos;
-		b.dir = model.player.dir;
-		model.bullets.Add(b);
+			model.player.dir = (clickedWorldPos - model.player.pos).Normalize();
 
-		model.gameState = GameState.Animation;
+			Bullet b = new Bullet();
+			b.pos = model.player.pos;
+			b.dir = model.player.dir;
+			model.bullets.Add(b);
+
+			model.gameState = GameState.Animation;
+		}
+		else
+		{
+			model.player.revolver.bullets = Config.MAGAZINE_SIZE;
+
+			model.gameState = GameState.EnemyTurn;
+		}
 	}
 
 	public static void ShootSuperBullet(World model)
@@ -140,7 +159,7 @@
 			b.isActive = originalBandit.isActive;
 			b.pos = originalBandit.pos;
 			b.dir = originalBandit.dir;
-			b.tickLife = originalBandit.tickLife;
+			b.turnsTillShoot = originalBandit.turnsTillShoot;
 			clone.bandits.Add(b);
 		}
 
