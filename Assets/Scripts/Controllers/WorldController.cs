@@ -75,7 +75,7 @@ public class WorldController : MonoBehaviour
 			clone,
 			new Position(worldPos.x, worldPos.z)
 		);
-		int steps = 50;
+		int steps = 25;
 		for (int i = 0; i < steps; i++)
 		{
 			for (int j = 0; j < 1; j++)
@@ -87,7 +87,7 @@ public class WorldController : MonoBehaviour
 			{
 				Gizmos.color = new Color(0f, 0f, 1f, 1f - (float)i / steps);
 				Gizmos.DrawWireSphere(b.pos.Vector3(), b.radius);
-				Gizmos.DrawLine(b.pos.Vector3(), b.pos.Vector3() + b.dir.Vector3());
+				Gizmos.DrawLine(b.pos.Vector3(), b.pos.Vector3() + (b.dir * b.speed).Vector3());
 			}
 			foreach (var g in clone.gizmos)
 			{
