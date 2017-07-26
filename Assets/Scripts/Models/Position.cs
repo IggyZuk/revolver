@@ -36,6 +36,11 @@ public struct Position
 		return Mathf.Sqrt(x * x + y * y);
 	}
 
+	public float MagnitudeSq()
+	{
+		return x * x + y * y;
+	}
+
 	public static float Distance(Position a, Position b)
 	{
 		return (b - a).Magnitude();
