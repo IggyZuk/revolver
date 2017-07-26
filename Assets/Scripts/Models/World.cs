@@ -4,7 +4,7 @@ public class World
 {
 	public int tickNum = 0;
 	public int turnNum = 0;
-	public GameState gameState = GameState.PlayerTurn;
+	public GameState gameState = GameState.EnemyTurn;
 	public Player player = new Player();
 	public List<Bandit> bandits = new List<Bandit>();
 	public List<Bullet> bullets = new List<Bullet>();
