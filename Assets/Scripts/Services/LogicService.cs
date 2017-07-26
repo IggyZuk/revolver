@@ -89,13 +89,13 @@
 		}
 	}
 
-	public static void ShootBullet(World model, Position clickedWorldPos)
+	public static void ShootBullet(World model, Position dir)
 	{
 		if (model.player.revolver.bullets > 0)
 		{
 			model.player.revolver.bullets--;
 
-			model.player.dir = (clickedWorldPos - model.player.pos).Normalize();
+            model.player.dir = dir;
 
 			Bullet b = new Bullet();
 			b.pos = model.player.pos;
