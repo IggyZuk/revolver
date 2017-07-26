@@ -61,27 +61,29 @@
 		foreach (var bullet in model.bullets)
 		{
 			bullet.pos += bullet.dir * bullet.speed;
+
 			bullet.tickLife--;
 			if (bullet.tickLife <= 0) bullet.isActive = false;
 
 			foreach (var bandit in model.bandits)
 			{
-				Position delta = bullet.pos - bandit.pos;
-				float allowedDistance = bullet.radius + bandit.radius;
-				float distance = delta.Magnitude();
-				if (distance < allowedDistance)
-				{
-					bandit.isActive = false;
+				Circle bulletCircle = CollisionService.CreateCircle(bullet.pos, bullet.dir * bullet.radius, bullet.radius);
+				Circle banditCircle = CollisionService.CreateCircle(bandit.pos, new Position(), bandit.radius);
 
-					Position normal = delta.Normalize();
-					Position hitPoint = bandit.pos + normal * allowedDistance;
+				Position hitPoint;
+				if (CollisionService.DynamicToStaticCircleCollision(bulletCircle, banditCircle, out hitPoint))
+				{
 					model.gizmos.Add(hitPoint);
 
-					bullet.pos = hitPoint;
-					bullet.dir = (bullet.dir * 0.5f + delta.Normalize() * 0.75f).Normalize();
-					bullet.tickLife = Config.BULLET_LIFE_TICKS;
+					Position delta = hitPoint - bandit.pos;
+					Position normal = delta.Normalize();
 
+					bullet.pos = hitPoint;
+					bullet.dir = (bullet.dir * 0.5f + normal * 0.75f).Normalize();
+					bullet.tickLife = Config.BULLET_LIFE_TICKS;
 					bullet.hits++;
+
+					bandit.isActive = false;
 				}
 			}
 		}
