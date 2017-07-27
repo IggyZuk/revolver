@@ -8,4 +8,5 @@ public class WorldView
     public Dictionary<int, BulletView> bulletViews = new Dictionary<int, BulletView>();
     public Dictionary<int, BanditView> banditViews = new Dictionary<int, BanditView>();
     public GameObject predictionRoot;
+    public GameObject inputRoot;
 }

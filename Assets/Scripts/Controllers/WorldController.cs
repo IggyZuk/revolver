@@ -59,6 +59,13 @@ public class WorldController : MonoBehaviour
             }
 
             ViewService.DrawPredictionPoints(view, predictionPoints);
+
+            var p1 = Camera.main.ScreenToWorldPoint(inputModel.startDragPos);
+            p1.y -= 0.5f;
+            var p2 = Camera.main.ScreenToWorldPoint(inputModel.currentDragPos);
+            p2.y -= 0.5f;
+
+            ViewService.DrawInputUI(view, p1, p2);
         }
     }
 

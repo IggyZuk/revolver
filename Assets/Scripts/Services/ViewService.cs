@@ -101,9 +101,40 @@ public static class ViewService
 
         foreach (Position point in points)
         {
-            GameObject predictionGo = Object.Instantiate(Resources.Load<GameObject>("Prefabs/Views/PredictionView"));
+            GameObject predictionGo = Object.Instantiate(Resources.Load<GameObject>("Prefabs/UI/PredictionView"));
             predictionGo.transform.position = point.Vector3();
             predictionGo.transform.SetParent(view.predictionRoot.transform);
         }
+    }
+
+    public static void DrawInputUI(WorldView view, Vector3 startPos, Vector3 endPos)
+    {
+        if (view.inputRoot != null)
+        {
+            Object.Destroy(view.inputRoot);
+        }
+
+        view.inputRoot = new GameObject("InputRoot");
+
+        GameObject startGo = AddInputView(3f, view.inputRoot.transform);
+        startGo.transform.position = startPos;
+        GameObject endGo = AddInputView(1f, view.inputRoot.transform);
+        endGo.transform.position = endPos;
+
+        float distance = (startPos - endPos).magnitude;
+        int steps = (int)(distance * 1f);
+        for (int i = 0; i < steps; i++)
+        {
+            GameObject midGo = AddInputView(0.25f, view.inputRoot.transform);
+            midGo.transform.position = Vector3.Lerp(startPos, endPos, (float)i / steps);
+        }
+
+    }
+
+    public static GameObject AddInputView(float scale, Transform parent) {
+        GameObject go = Object.Instantiate(Resources.Load<GameObject>("Prefabs/UI/InputView"));
+        go.transform.localScale = Vector3.one * scale;
+        go.transform.SetParent(parent);
+        return go;
     }
 }
