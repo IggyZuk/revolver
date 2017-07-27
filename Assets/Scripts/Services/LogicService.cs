@@ -4,7 +4,8 @@
 	{
 		model.tickNum++;
 
-		switch (model.gameState) {
+		switch (model.gameState)
+		{
 			case GameState.PlayerTurn:
 			case GameState.Animation:
 				TickBullets(model);
@@ -46,6 +47,21 @@
 			{
 				bandit.isActive = false;
 				state = GameState.GameOver;
+			}
+
+			foreach (var otherBandit in model.bandits)
+			{
+				if (bandit != otherBandit)
+				{
+					float maxDistSq = (float)System.Math.Pow(bandit.radius + otherBandit.radius, 2);
+					Position dir = bandit.pos - otherBandit.pos;
+					float distSq = dir.MagnitudeSq();
+					if (distSq < maxDistSq)
+					{
+						bandit.pos += dir * bandit.radius;
+						otherBandit.pos -= dir * otherBandit.radius;
+					}
+				}
 			}
 		}
 
