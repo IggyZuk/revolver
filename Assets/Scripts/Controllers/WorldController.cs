@@ -1,15 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class WorldController : MonoBehaviour
 {
-    World model = new World();
-    WorldView view = new WorldView();
+    World model;
+    WorldView view;
 
     InputController input = new InputController();
     InputController.InputModel inputModel;
 
     void Awake()
     {
+        model = new World();
+        view = ViewService.CreateWorldView();
+
         inputModel = input.GetModel();
 
         inputModel.shootAction += (touchUpPos) =>
@@ -30,12 +34,38 @@ public class WorldController : MonoBehaviour
     void Update()
     {
         input.Update();
+
+        if (inputModel.isDragging)
+        {
+            World clone = LogicService.CloneWorldWithoutBullets(model);
+
+            LogicService.ShootBullet(
+                clone,
+                input.GetShootDir()
+            );
+
+            List<Position> predictionPoints = new List<Position>();
+            for (int i = 0; i < Config.PREDICTION_STEPS; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    LogicService.Tick(clone);
+                }
+
+                foreach (var b in clone.bullets.Values)
+                {
+                    predictionPoints.Add(b.pos);
+                }
+            }
+
+            ViewService.DrawPredictionPoints(view, predictionPoints);
+        }
     }
 
     void FixedUpdate()
     {
         LogicService.Tick(model);
-        ViewService.Update(model, view);
+        ViewService.Tick(model, view);
     }
 
     void OnDrawGizmos()
@@ -54,14 +84,14 @@ public class WorldController : MonoBehaviour
         Gizmos.DrawSphere(model.player.pos.Vector3(), model.player.radius);
         Gizmos.DrawLine(model.player.pos.Vector3(), model.player.pos.Vector3() + model.player.dir.Vector3());
 
-        foreach (var b in model.bandits)
+        foreach (var b in model.bandits.Values)
         {
             Gizmos.color = Color.Lerp(Color.white, Color.red, 1f - (float)b.turnsTillShoot / Config.DEFAULT_BANDIT_TURNS);
             Gizmos.DrawSphere(b.pos.Vector3(), b.radius);
             Gizmos.DrawLine(b.pos.Vector3(), b.pos.Vector3() + b.dir.Vector3());
         }
 
-        foreach (var b in model.bullets)
+        foreach (var b in model.bullets.Values)
         {
             Gizmos.color = Color.blue;
             Gizmos.DrawSphere(b.pos.Vector3(), b.radius);
@@ -93,7 +123,7 @@ public class WorldController : MonoBehaviour
                 LogicService.Tick(clone);
             }
 
-            foreach (var b in clone.bullets)
+            foreach (var b in clone.bullets.Values)
             {
                 Gizmos.color = new Color(0f, 0f, 1f, 1f - (float)i / steps);
                 Gizmos.DrawWireSphere(b.pos.Vector3(), b.radius);
@@ -128,7 +158,7 @@ public class WorldController : MonoBehaviour
             var p2 = Camera.main.ScreenToWorldPoint(inputModel.currentDragPos);
             p2.y = 0;
 
-            Gizmos.color = Color.black;
+            Gizmos.color = Color.cyan;
             Gizmos.DrawLine(p1, p2);
 
             Gizmos.DrawSphere(p1, 1f);

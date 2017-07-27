@@ -1,5 +1,6 @@
 ﻿public class Bullet
 {
+    public int id = -1;
 	public bool isActive = true;
 	public Position pos = new Position();
 	public Position dir = new Position(0, 1);
