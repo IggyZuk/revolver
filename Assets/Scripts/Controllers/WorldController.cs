@@ -16,21 +16,11 @@ public class WorldController : MonoBehaviour
         {
             if (model.gameState == GameState.PlayerTurn)
             {
-                Vector3 p1 = Camera.main.ScreenToWorldPoint(touchUpPos);
-                Vector3 p2 = Camera.main.ScreenToWorldPoint(inputModel.startDragPos);
-
-                Position endPos = new Position(p1.x, p1.z);
-                Position startPos = new Position(p2.x, p2.z);
-
-                Position diff = startPos - endPos;
-
-                if (diff.Magnitude() > 1f)
+                if (inputModel.distance > 1f)
                 {
-                    Position dir = diff.Normalize();
-
                     LogicService.ShootBullet(
                         model,
-                        dir
+                        input.GetShootDir()
                     );
                 }
             }
@@ -90,17 +80,9 @@ public class WorldController : MonoBehaviour
     {
         World clone = LogicService.CloneWorldWithoutBullets(model);
 
-        Vector3 p1 = Camera.main.ScreenToWorldPoint(inputModel.currentDragPos);
-        Vector3 p2 = Camera.main.ScreenToWorldPoint(inputModel.startDragPos);
-
-        Position endPos = new Position(p1.x, p1.z);
-        Position startPos = new Position(p2.x, p2.z);
-
-        Position dir = (startPos - endPos).Normalize();
-
         LogicService.ShootBullet(
             clone,
-            dir
+            input.GetShootDir()
         );
 
         int steps = 25;
