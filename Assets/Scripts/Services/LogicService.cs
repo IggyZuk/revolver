@@ -4,8 +4,7 @@
 	{
 		model.tickNum++;
 
-		switch (model.gameState)
-		{
+		switch (model.gameState) {
 			case GameState.PlayerTurn:
 			case GameState.Animation:
 				TickBullets(model);
@@ -15,6 +14,11 @@
 
 			case GameState.EnemyTurn:
 				TickBandits(model);
+				model.wind = new Position(
+					UnityEngine.Random.Range(-Config.WIND_STRENGTH, Config.WIND_STRENGTH),
+					UnityEngine.Random.Range(-Config.WIND_STRENGTH, Config.WIND_STRENGTH)
+				);
+
 				break;
 			case GameState.GameOver:
 				model.player.revolver.bullets = Config.MAGAZINE_SIZE;
@@ -60,6 +64,7 @@
 	{
 		foreach (var bullet in model.bullets)
 		{
+			bullet.dir += model.wind;
 			bullet.pos += bullet.dir * bullet.speed;
 
 			bullet.tickLife--;
@@ -95,7 +100,7 @@
 		{
 			model.player.revolver.bullets--;
 
-            model.player.dir = dir;
+			model.player.dir = dir;
 
 			Bullet b = new Bullet();
 			b.pos = model.player.pos;
@@ -154,6 +159,7 @@
 		clone.player.pos = original.player.pos;
 		clone.player.dir = original.player.dir;
 		clone.nextBanditSpawnTick = original.nextBanditSpawnTick;
+		clone.wind = original.wind;
 
 		foreach (var originalBandit in original.bandits)
 		{

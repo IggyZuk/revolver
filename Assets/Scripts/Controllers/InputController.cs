@@ -20,15 +20,19 @@ public class InputController
 
 	public void Update()
 	{
-		if (Input.GetMouseButtonDown(0)) {
+		if (Input.GetMouseButtonDown(0))
+		{
 			inputModel.startDragPos = Input.mousePosition;
 			inputModel.isDragging = true;
-		} else if (Input.GetMouseButtonUp(0)) {
+		}
+		else if (Input.GetMouseButtonUp(0))
+		{
 			inputModel.isDragging = false;
 			if (inputModel.shootAction != null) inputModel.shootAction(Input.mousePosition);
 		}
 
-		if (inputModel.isDragging) {
+		if (inputModel.isDragging)
+		{
 			inputModel.currentDragPos = Input.mousePosition;
 
 			Vector3 startPosWorld = Camera.main.ScreenToWorldPoint(inputModel.startDragPos);
