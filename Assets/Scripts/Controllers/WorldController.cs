@@ -47,7 +47,7 @@ public class WorldController : MonoBehaviour
             List<Position> predictionPoints = new List<Position>();
             for (int i = 0; i < Config.PREDICTION_STEPS; i++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int j = 0; j < 2; j++)
                 {
                     LogicService.Tick(clone);
                 }
@@ -66,6 +66,19 @@ public class WorldController : MonoBehaviour
     {
         LogicService.Tick(model);
         ViewService.Tick(model, view);
+    }
+
+    void OnGUI()
+    {
+        GUI.Label(
+            new Rect(0, 0, 100, 100),
+            string.Format("{0}/{1}", model.player.revolver.bullets, Config.MAGAZINE_SIZE)
+        );
+
+        GUI.Label(
+            new Rect(Screen.width - 100, 0, 100, 100),
+            string.Format("Highscore: {0}", model.bulletHitsScore)
+        );
     }
 
     void OnDrawGizmos()
