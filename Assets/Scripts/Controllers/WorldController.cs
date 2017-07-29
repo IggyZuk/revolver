@@ -114,7 +114,7 @@ public class WorldController : MonoBehaviour
 
         foreach (var b in model.bandits.Values)
         {
-            Gizmos.color = Color.Lerp(Color.white, Color.red, 1f - (float)b.turnsTillShoot / Config.DEFAULT_BANDIT_TURNS);
+            Gizmos.color = Color.Lerp(Color.white, Color.red, 1f - b.distance / Config.SPAWN_RANGE);
             Gizmos.DrawSphere(b.pos.Vector3(), b.radius);
             Gizmos.DrawLine(b.pos.Vector3(), b.pos.Vector3() + b.dir.Vector3());
         }

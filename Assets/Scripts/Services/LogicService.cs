@@ -44,10 +44,14 @@ public static class LogicService
 
         foreach (var bandit in model.bandits.Values)
         {
+            Position banditToPlayer = model.player.pos - bandit.pos;
+            bandit.dir = banditToPlayer.Normalize();
             bandit.pos += bandit.dir * bandit.speed;
-            bandit.turnsTillShoot--;
+            bandit.distance = banditToPlayer.Magnitude();
+
             model.events.Enqueue(new BanditMovedEvent(bandit.id));
-            if (bandit.turnsTillShoot <= 0)
+
+            if (bandit.distance <= Config.MIN_DISTANCE)
             {
                 bandit.isActive = false;
                 state = GameState.GameOver;
@@ -76,7 +80,7 @@ public static class LogicService
     {
         Bandit b = new Bandit();
         b.id = model.nextBanditId;
-        b.pos = new Position(UnityEngine.Random.insideUnitCircle.normalized * 15);
+        b.pos = new Position(UnityEngine.Random.insideUnitCircle.normalized * Config.SPAWN_RANGE);
         b.dir = (model.player.pos - b.pos).Normalize();
         model.bandits.Add(b.id, b);
 
@@ -130,12 +134,25 @@ public static class LogicService
                     Position delta = hitPoint - bandit.pos;
                     Position normal = delta.Normalize();
 
+                    Position pushDir = (bullet.dir * 0.5f + normal * 0.75f).Normalize();
+
+
                     bullet.pos = hitPoint;
-                    bullet.dir = (bullet.dir * 0.5f + normal * 0.75f).Normalize();
+                    bullet.dir = pushDir;
                     bullet.ricochetLifeHits--;
                     bullet.hits++;
 
-                    bandit.isActive = false;
+                    bandit.pos += pushDir * -2f;
+                    bandit.hp--;
+
+                    if (bandit.hp <= 0)
+                    {
+                        bandit.isActive = false;
+                    }
+                    else
+                    {
+                        model.events.Enqueue(new BanditDamagedEvent(bandit.id));
+                    }
                 }
             }
 
@@ -239,7 +256,7 @@ public static class LogicService
             b.isActive = originalBandit.isActive;
             b.pos = originalBandit.pos;
             b.dir = originalBandit.dir;
-            b.turnsTillShoot = originalBandit.turnsTillShoot;
+            b.distance = originalBandit.distance;
             clone.bandits.Add(b.id, b);
         }
 
