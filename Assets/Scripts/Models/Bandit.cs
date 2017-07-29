@@ -7,5 +7,5 @@
 	public float speed = 1.5f;
 	public float radius = 1.15f;
     public float distance = float.MaxValue;
-    public int hp = 3;
+    public int hp = 5;
 }

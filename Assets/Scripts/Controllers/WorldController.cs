@@ -23,13 +23,18 @@ public class WorldController : MonoBehaviour
             {
                 if (inputModel.distance > 1f)
                 {
-                    Position shootDir = input.GetShootDir();
-                    Position leftDir = (shootDir + Position.RotateLeft(shootDir) * Config.SPREAD).Normalize();
-                    Position rightDir = (shootDir + Position.RotateRight(shootDir) * Config.SPREAD).Normalize();
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Position shootDir = input.GetShootDir();
+                        Position leftDir = (shootDir + Position.RotateLeft(shootDir) * Config.SPREAD).Normalize();
+                        Position rightDir = (shootDir + Position.RotateRight(shootDir) * Config.SPREAD).Normalize();
 
-                    LogicService.ShootBullet(model, shootDir);
-                    LogicService.ShootBullet(model, leftDir);
-                    LogicService.ShootBullet(model, rightDir);
+                        LogicService.ShootBullet(model, shootDir);
+                        LogicService.ShootBullet(model, leftDir);
+                        LogicService.ShootBullet(model, rightDir);
+                    }
+
+                    AudioController.Instance.PlaySound(AudioController.Sound.Shot);
                 }
             }
         };

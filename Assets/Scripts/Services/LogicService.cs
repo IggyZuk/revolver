@@ -11,12 +11,14 @@ public static class LogicService
             case GameState.PlayerTurn:
             case GameState.Animation:
             TickBullets(model);
+            CollideBandits(model);
             RemoveBullets(model);
             RemoveBandits(model);
             break;
 
             case GameState.EnemyTurn:
             TickBandits(model);
+            CollideBandits(model);
             model.wind = new Position(
                 UnityEngine.Random.Range(-Config.WIND_STRENGTH, Config.WIND_STRENGTH),
                 UnityEngine.Random.Range(-Config.WIND_STRENGTH, Config.WIND_STRENGTH)
@@ -56,7 +58,15 @@ public static class LogicService
                 bandit.isActive = false;
                 state = GameState.GameOver;
             }
+        }
 
+        model.gameState = state;
+    }
+
+    public static void CollideBandits(World model)
+    {
+        foreach (var bandit in model.bandits.Values)
+        {
             foreach (var otherBandit in model.bandits.Values)
             {
                 if (bandit != otherBandit)
@@ -72,8 +82,6 @@ public static class LogicService
                 }
             }
         }
-
-        model.gameState = state;
     }
 
     public static void SpawnBandit(World model)
@@ -109,6 +117,8 @@ public static class LogicService
                     )
                 );
                 bullet.ricochetLifeHits--;
+
+                AudioController.Instance.PlaySound(AudioController.Sound.Ricoshet);
             }
             if (bulletViewportPos.y < 0 || bulletViewportPos.y > 1)
             {
@@ -119,6 +129,7 @@ public static class LogicService
                     )
                 );
                 bullet.ricochetLifeHits--;
+                AudioController.Instance.PlaySound(AudioController.Sound.Ricoshet);
             }
 
             foreach (var bandit in model.bandits.Values)
@@ -149,7 +160,7 @@ public static class LogicService
                     {
                         bandit.isActive = false;
                     }
-                    else
+                    else if (bandit.hp > 0)
                     {
                         model.events.Enqueue(new BanditDamagedEvent(bandit.id));
                     }

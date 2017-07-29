@@ -17,5 +17,6 @@ public class BulletRemovedEvent : BaseEvent
             view.bulletViews.Remove(id);
             VisualEffectsService.AddExplosion(view, bulletView.transform.position);
         }
+        AudioController.Instance.PlaySound(AudioController.Sound.BulletDisappear);
     }
 }

@@ -17,6 +17,7 @@ public class BanditRemovedEvent : BaseEvent
             Object.Destroy(banditView.gameObject);
             view.banditViews.Remove(id);
             VisualEffectsService.AddExplosion(view, banditView.transform.position);
+            AudioController.Instance.PlaySound(AudioController.Sound.BanditDeath);
         }
     }
 }
