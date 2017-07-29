@@ -15,7 +15,7 @@ public class BanditMovedEvent : BaseEvent
         BanditView banditView = ViewService.GetBanditViewWithId(view, id);
         if (banditView != null)
         {
-            banditView.GetComponent<MeshRenderer>().material.SetColor(
+            banditView.GetComponentInChildren<MeshRenderer>().material.SetColor(
                 "_Color",
                 Color.Lerp(new Color32(200, 0, 65, 255), Color.white, (float)bandit.turnsTillShoot / Config.DEFAULT_BANDIT_TURNS)
             );

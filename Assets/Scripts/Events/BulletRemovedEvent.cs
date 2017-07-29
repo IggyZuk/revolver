@@ -15,6 +15,7 @@ public class BulletRemovedEvent : BaseEvent
         {
             Object.Destroy(bulletView.gameObject);
             view.bulletViews.Remove(id);
+            VisualEffectsService.AddExplosion(view, bulletView.transform.position);
         }
     }
 }

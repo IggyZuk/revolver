@@ -92,8 +92,30 @@ public static class LogicService
             bullet.dir += model.wind;
             bullet.pos += bullet.dir * bullet.speed;
 
-            bullet.tickLife--;
-            if (bullet.tickLife <= 0) bullet.isActive = false;
+            UnityEngine.Camera cam = UnityEngine.Camera.main;
+            UnityEngine.Vector2 bulletViewportPos = cam.WorldToViewportPoint(bullet.pos.Vector3());
+            UnityEngine.Vector3 bulletWorldPos = bullet.pos.Vector3();
+
+            if (bulletViewportPos.x < 0 || bulletViewportPos.x > 1)
+            {
+                bullet.dir = new Position(-bullet.dir.x, bullet.dir.y).Normalize();
+                bullet.pos = new Position(
+                    cam.ViewportToWorldPoint(
+                        new UnityEngine.Vector2(UnityEngine.Mathf.Clamp01(bulletViewportPos.x), bulletViewportPos.y)
+                    )
+                );
+                bullet.ricochetLifeHits--;
+            }
+            if (bulletViewportPos.y < 0 || bulletViewportPos.y > 1)
+            {
+                bullet.dir = new Position(bullet.dir.x, -bullet.dir.y).Normalize();
+                bullet.pos = new Position(
+                    cam.ViewportToWorldPoint(
+                        new UnityEngine.Vector2(bulletViewportPos.x, UnityEngine.Mathf.Clamp01(bulletViewportPos.y))
+                    )
+                );
+                bullet.ricochetLifeHits--;
+            }
 
             foreach (var bandit in model.bandits.Values)
             {
@@ -110,12 +132,14 @@ public static class LogicService
 
                     bullet.pos = hitPoint;
                     bullet.dir = (bullet.dir * 0.5f + normal * 0.75f).Normalize();
-                    bullet.tickLife = Config.BULLET_LIFE_TICKS;
+                    bullet.ricochetLifeHits--;
                     bullet.hits++;
 
                     bandit.isActive = false;
                 }
             }
+
+            if (bullet.ricochetLifeHits <= 0) bullet.isActive = false;
         }
     }
 
@@ -123,7 +147,7 @@ public static class LogicService
     {
         if (model.player.revolver.bullets > 0)
         {
-            model.player.revolver.bullets--;
+            //model.player.revolver.bullets--;
 
             model.player.dir = dir;
 
@@ -175,7 +199,10 @@ public static class LogicService
             model.bullets.Remove(bulletId);
             model.events.Enqueue(new BulletRemovedEvent(bulletId));
 
-            model.gameState = GameState.EnemyTurn;
+            if (model.bullets.Count == 0)
+            {
+                model.gameState = GameState.EnemyTurn;
+            }
         }
     }
 

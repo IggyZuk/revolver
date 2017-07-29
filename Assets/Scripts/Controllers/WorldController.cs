@@ -12,6 +12,7 @@ public class WorldController : MonoBehaviour
     void Awake()
     {
         model = new World();
+
         view = ViewService.CreateWorldView();
 
         inputModel = input.GetModel();
@@ -22,10 +23,13 @@ public class WorldController : MonoBehaviour
             {
                 if (inputModel.distance > 1f)
                 {
-                    LogicService.ShootBullet(
-                        model,
-                        input.GetShootDir()
-                    );
+                    Position shootDir = input.GetShootDir();
+                    Position leftDir = (shootDir + Position.RotateLeft(shootDir) * Config.SPREAD).Normalize();
+                    Position rightDir = (shootDir + Position.RotateRight(shootDir) * Config.SPREAD).Normalize();
+
+                    LogicService.ShootBullet(model, shootDir);
+                    LogicService.ShootBullet(model, leftDir);
+                    LogicService.ShootBullet(model, rightDir);
                 }
             }
         };
@@ -39,15 +43,18 @@ public class WorldController : MonoBehaviour
         {
             World clone = LogicService.CloneWorldWithoutBullets(model);
 
-            LogicService.ShootBullet(
-                clone,
-                input.GetShootDir()
-            );
+            Position shootDir = input.GetShootDir();
+            Position leftDir = (shootDir + Position.RotateLeft(shootDir) * Config.SPREAD).Normalize();
+            Position rightDir = (shootDir + Position.RotateRight(shootDir) * Config.SPREAD).Normalize();
+
+            LogicService.ShootBullet(clone, shootDir);
+            LogicService.ShootBullet(clone, leftDir);
+            LogicService.ShootBullet(clone, rightDir);
 
             List<Position> predictionPoints = new List<Position>();
             for (int i = 0; i < Config.PREDICTION_STEPS; i++)
             {
-                for (int j = 0; j < 2; j++)
+                for (int j = 0; j < 1; j++)
                 {
                     LogicService.Tick(clone);
                 }
@@ -96,6 +103,7 @@ public class WorldController : MonoBehaviour
         DrawBulletPrediction();
         DrawRevolverMagazine();
         DrawInput();
+        DrawWorldBounds();
     }
 
     void DrawWorld()
@@ -135,7 +143,7 @@ public class WorldController : MonoBehaviour
             input.GetShootDir()
         );
 
-        int steps = 25;
+        int steps = 0;
         for (int i = 0; i < steps; i++)
         {
             for (int j = 0; j < 1; j++)
@@ -183,5 +191,10 @@ public class WorldController : MonoBehaviour
 
             Gizmos.DrawSphere(p1, 1f);
         }
+    }
+
+    void DrawWorldBounds()
+    {
+
     }
 }
