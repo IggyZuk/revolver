@@ -25,7 +25,7 @@ public class WorldController : MonoBehaviour
                     Vector shootDir = input.GetShootDir();
                     LogicService.ShootBullet(model, shootDir);
 
-                    for (int i = 0; i < 0; i++)
+                    for (int i = 0; i < 3; i++)
                     {
                         Vector leftDir = (shootDir + Vector.RotateLeft(shootDir) * Config.SPREAD * i).Normalize();
                         Vector rightDir = (shootDir + Vector.RotateRight(shootDir) * Config.SPREAD * i).Normalize();

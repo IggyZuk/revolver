@@ -108,27 +108,20 @@ public static class LogicService
             UnityEngine.Vector2 bulletViewportPos = cam.WorldToViewportPoint(bullet.pos.Vector3());
             UnityEngine.Vector3 bulletWorldPos = bullet.pos.Vector3();
 
-            if (bulletViewportPos.x < 0 || bulletViewportPos.x > 1)
+            if (bullet.pos.Magnitude() > model.radius)
             {
-                bullet.dir = new Vector(-bullet.dir.x, bullet.dir.y).Normalize();
-                bullet.pos = new Vector(
-                    cam.ViewportToWorldPoint(
-                        new UnityEngine.Vector2(UnityEngine.Mathf.Clamp01(bulletViewportPos.x), bulletViewportPos.y)
-                    )
-                );
+                Vector normal = -bullet.pos.Normalize();
+                Vector dir = bullet.dir;
+                Vector reflection = -(Vector.Project(dir, normal) * 2f + dir).Normalize();
+
+                bullet.dir = (reflection + new Vector(
+                    UnityEngine.Random.value * 0.5f,
+                    UnityEngine.Random.value * 0.5f)
+                 ).Normalize();
+
+                bullet.pos = bullet.pos.Normalize() * (model.radius - bullet.radius - 1f);
                 bullet.ricochetLifeHits--;
 
-                AudioController.Instance.PlaySound(AudioController.Sound.Ricoshet);
-            }
-            if (bulletViewportPos.y < 0 || bulletViewportPos.y > 1)
-            {
-                bullet.dir = new Vector(bullet.dir.x, -bullet.dir.y).Normalize();
-                bullet.pos = new Vector(
-                    cam.ViewportToWorldPoint(
-                        new UnityEngine.Vector2(bulletViewportPos.x, UnityEngine.Mathf.Clamp01(bulletViewportPos.y))
-                    )
-                );
-                bullet.ricochetLifeHits--;
                 AudioController.Instance.PlaySound(AudioController.Sound.Ricoshet);
             }
 

@@ -92,6 +92,11 @@ public struct Vector
         return new Vector(left.x / right, left.y / right);
     }
 
+    public static Vector operator -(Vector self)
+    {
+        return new Vector(-self.x, -self.y);
+    }
+
     public static Vector Lerp(Vector a, Vector b, float f)
     {
         return new Vector(Mathf.Lerp(a.x, b.x, f), Mathf.Lerp(a.y, b.y, f));
