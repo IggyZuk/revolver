@@ -108,6 +108,48 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &406859577
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 406632, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 406632, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 406632, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 406632, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 406632, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 406632, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 406632, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 406632, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &481327111
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,6 +162,9 @@ GameObject:
   - component: {fileID: 481327114}
   - component: {fileID: 481327113}
   - component: {fileID: 481327112}
+  - component: {fileID: 481327119}
+  - component: {fileID: 481327118}
+  - component: {fileID: 481327117}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -190,13 +235,93 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 481327111}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 10, z: 0}
+  m_LocalRotation: {x: 0.35355338, y: 0.35355338, z: -0.1464466, w: 0.8535535}
+  m_LocalPosition: {x: -10, y: 14.14, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 45, z: 0}
+--- !u!114 &481327117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 481327111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c1c1c9e7943464eab48ed3c5788a45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Camera: {fileID: 481327115}
+  m_MovementSpeed: 1
+  m_FastMovementSpeed: 2
+  m_RollSpeed: 90
+  m_MouseXAxisSpeed: 3
+  m_MouseYAxisSpeed: 3
+  m_InvertY: 0
+  m_CameraMode: 1
+  m_ShowFPS: 1
+  m_ForceVsync: 1
+  m_CameraControlMouseButton: 1
+  m_KeyboardControlToggle: 0
+  m_KeyForward: 119
+  m_KeyBack: 115
+  m_KeyLeft: 97
+  m_KeyRight: 100
+  m_KeyUp: 114
+  m_KeyDown: 102
+  m_KeyRollLeft: 113
+  m_KeyRollRight: 101
+  m_KeyScreenshot: 293
+--- !u!114 &481327118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 481327111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 856d84ca395646e4094a0b5854874360, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Priority: 0
+  m_MaterialGL: {fileID: 2100000, guid: 126a17d2a41b0364aad540081f2d4f65, type: 2}
+  m_MaterialMesh: {fileID: 2100000, guid: 23da08da0fe8e2f42b2c3cc0dc8a9194, type: 2}
+  m_Font: {fileID: 12800000, guid: c5184d3137772cd4aa348ad31cc2b6b0, type: 3}
+  m_FontSize: 18
+  m_3DDistanceCull: 0
+  m_3DDistanceCullMaxDist: 100
+  m_3DLabelFadeOverDistance: 0
+  m_3DLabelMinFadeDistance: 10
+  m_3DLabelMaxFadeDistance: 100
+  m_3DLabelSortByDistance: 1
+  m_RefreshInspector: 0
+  m_MaxGLVertices: 16384
+  m_MaxMeshVertices: 16384
+  m_MeshLayer: 0
+  m_MaxVisibleLabels: 256
+--- !u!114 &481327119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 481327111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8379b673feece5d4c925e12245baec2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MeshQuad: {fileID: 4300002, guid: 01eb41b0b51f98a498d3564048928fe4, type: 3}
+  m_MeshBox: {fileID: 4300000, guid: b72de038b99c81447b1d9c4289809198, type: 3}
+  m_MeshPyramid: {fileID: 4300000, guid: 2ae13bff99c390d45bf96c8282404eea, type: 3}
+  m_MeshRhombus: {fileID: 4300000, guid: ae4378072ef627041bd1d9cd88631627, type: 3}
+  m_MeshDisc: {fileID: 4300002, guid: f1c6cce408cb4e6459f1686ab08405a9, type: 3}
+  m_MeshSphere: {fileID: 4300000, guid: c5cec14714c0e5d4ab7a0139e92df731, type: 3}
+  m_MeshCone: {fileID: 4300000, guid: e87a6476b109da14c9668d0fc98353d4, type: 3}
+  m_MeshCapsuleBody: {fileID: 4300000, guid: d1a0d9d3044ea1a46aec34df44d78fda, type: 3}
+  m_MeshCapsuleCap: {fileID: 4300000, guid: cff5b33a1fa74e045a35c135a657a1ec, type: 3}
+  m_MeshCylinder: {fileID: 4300002, guid: f98dcfd435e63ea40a8cf1eebdc0d63a, type: 3}
 --- !u!1 &1136989317
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,7 +349,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25ddfdac4f8a407791de064b841f255, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sources: []
   clips:
   - sound: 0
     audioClip: {fileID: 8300000, guid: 8fc66f9a789050f418b0fb42aca34b8d, type: 3}

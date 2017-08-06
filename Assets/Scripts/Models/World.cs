@@ -15,4 +15,6 @@ public class World
     public List<Vector> gizmos = new List<Vector>();
     public Vector wind = new Vector(0.01f, 0.01f);
     public Queue<BaseEvent> events = new Queue<BaseEvent>();
+    public List<Vector> predictionPoints = new List<Vector>();
+    public float radius = 15f;
 }

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 856d84ca395646e4094a0b5854874360
+timeCreated: 1459426199
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - m_IMDrawManager: {instanceID: 0}
+  - m_MaterialGL: {fileID: 2100000, guid: 126a17d2a41b0364aad540081f2d4f65, type: 2}
+  - m_MaterialMesh: {fileID: 2100000, guid: 23da08da0fe8e2f42b2c3cc0dc8a9194, type: 2}
+  - m_Font: {instanceID: 0}
+  executionOrder: 10000
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

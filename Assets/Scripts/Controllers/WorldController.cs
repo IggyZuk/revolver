@@ -4,7 +4,7 @@ using UnityEngine;
 public class WorldController : MonoBehaviour
 {
     World model;
-    //WorldView view;
+    GraphicsWorldView view;
 
     InputController input = new InputController();
     InputController.InputModel inputModel;
@@ -12,8 +12,7 @@ public class WorldController : MonoBehaviour
     void Awake()
     {
         model = new World();
-
-        //view = ViewService.CreateWorldView();
+        view = new GraphicsWorldView();
 
         inputModel = input.GetModel();
 
@@ -26,7 +25,7 @@ public class WorldController : MonoBehaviour
                     Vector shootDir = input.GetShootDir();
                     LogicService.ShootBullet(model, shootDir);
 
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < 0; i++)
                     {
                         Vector leftDir = (shootDir + Vector.RotateLeft(shootDir) * Config.SPREAD * i).Normalize();
                         Vector rightDir = (shootDir + Vector.RotateRight(shootDir) * Config.SPREAD * i).Normalize();
@@ -50,12 +49,8 @@ public class WorldController : MonoBehaviour
             World clone = LogicService.CloneWorldWithoutBullets(model);
 
             Vector shootDir = input.GetShootDir();
-            Vector leftDir = (shootDir + Vector.RotateLeft(shootDir) * Config.SPREAD).Normalize();
-            Vector rightDir = (shootDir + Vector.RotateRight(shootDir) * Config.SPREAD).Normalize();
 
             LogicService.ShootBullet(clone, shootDir);
-            LogicService.ShootBullet(clone, leftDir);
-            LogicService.ShootBullet(clone, rightDir);
 
             List<Vector> predictionPoints = new List<Vector>();
             for (int i = 0; i < Config.PREDICTION_STEPS; i++)
@@ -71,21 +66,15 @@ public class WorldController : MonoBehaviour
                 }
             }
 
-            //ViewService.DrawPredictionPoints(view, predictionPoints);
-
-            //var p1 = Camera.main.ScreenToWorldPoint(inputModel.startDragPos);
-            //p1.y -= 0.5f;
-            //var p2 = Camera.main.ScreenToWorldPoint(inputModel.currentDragPos);
-            //p2.y -= 0.5f;
-
-            //ViewService.DrawInputUI(view, p1, p2);
+            model.predictionPoints = predictionPoints;
         }
+
+        view.Tick(model);
     }
 
     void FixedUpdate()
     {
         LogicService.Tick(model);
-        //ViewService.Tick(model, view);
     }
 
     void OnGUI()
@@ -109,7 +98,6 @@ public class WorldController : MonoBehaviour
         DrawBulletPrediction();
         DrawRevolverMagazine();
         DrawInput();
-        DrawWorldBounds();
     }
 
     void DrawWorld()
@@ -199,8 +187,25 @@ public class WorldController : MonoBehaviour
         }
     }
 
-    void DrawWorldBounds()
+    public string GetModelJson()
     {
+        return Newtonsoft.Json.JsonConvert.SerializeObject(model);
+    }
 
+    public void Save()
+    {
+        string json = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+        PlayerPrefs.SetString("world", json);
+
+        Debug.Log("Saved: " + json);
+    }
+
+    public void Load()
+    {
+        string json = PlayerPrefs.GetString("world");
+        World loadedModel = Newtonsoft.Json.JsonConvert.DeserializeObject<World>(json);
+        model = loadedModel;
+
+        Debug.Log("Loaded: " + json);
     }
 }

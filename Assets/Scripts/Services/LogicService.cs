@@ -162,6 +162,7 @@ public static class LogicService
                     }
                     else if (bandit.hp > 0)
                     {
+                        AudioController.Instance.PlaySound(AudioController.Sound.DamageBandit);
                         model.events.Enqueue(new BanditDamagedEvent(bandit.id));
                     }
                 }
@@ -226,6 +227,7 @@ public static class LogicService
 
             model.bullets.Remove(bulletId);
             model.events.Enqueue(new BulletRemovedEvent(bulletId));
+            AudioController.Instance.PlaySound(AudioController.Sound.BulletDisappear);
 
             if (model.bullets.Count == 0)
             {
