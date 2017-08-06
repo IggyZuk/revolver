@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldController : MonoBehaviour
@@ -25,7 +25,7 @@ public class WorldController : MonoBehaviour
                     Vector shootDir = input.GetShootDir();
                     LogicService.ShootBullet(model, shootDir);
 
-                    for (int i = 0; i < 3; i++)
+                    for (int i = 0; i < 5; i++)
                     {
                         Vector leftDir = (shootDir + Vector.RotateLeft(shootDir) * Config.SPREAD * i).Normalize();
                         Vector rightDir = (shootDir + Vector.RotateRight(shootDir) * Config.SPREAD * i).Normalize();
