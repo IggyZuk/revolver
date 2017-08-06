@@ -90,7 +90,7 @@ public static class ViewService
         return null;
     }
 
-    public static void DrawPredictionPoints(WorldView view, List<Position> points)
+    public static void DrawPredictionPoints(WorldView view, List<Vector> points)
     {
         if (view.predictionRoot != null)
         {
@@ -99,7 +99,7 @@ public static class ViewService
 
         view.predictionRoot = new GameObject("PredictionPoints");
 
-        foreach (Position point in points)
+        foreach (Vector point in points)
         {
             GameObject predictionGo = Object.Instantiate(Resources.Load<GameObject>("Prefabs/UI/PredictionView"));
             predictionGo.transform.position = point.Vector3();

@@ -11,7 +11,7 @@ public static class LogicService
             case GameState.PlayerTurn:
             case GameState.Animation:
             TickBullets(model);
-            CollideBandits(model);
+            //CollideBandits(model);
             RemoveBullets(model);
             RemoveBandits(model);
             break;
@@ -19,7 +19,7 @@ public static class LogicService
             case GameState.EnemyTurn:
             TickBandits(model);
             CollideBandits(model);
-            model.wind = new Position(
+            model.wind = new Vector(
                 UnityEngine.Random.Range(-Config.WIND_STRENGTH, Config.WIND_STRENGTH),
                 UnityEngine.Random.Range(-Config.WIND_STRENGTH, Config.WIND_STRENGTH)
             );
@@ -29,7 +29,7 @@ public static class LogicService
             model.player.revolver.bullets = Config.MAGAZINE_SIZE;
             model.bandits.Clear();
             model.bandits.Clear();
-            model.gameState = GameState.PlayerTurn;
+            model.gameState = GameState.EnemyTurn;
             model.events.Enqueue(new GameOverEvent());
             break;
         }
@@ -46,7 +46,7 @@ public static class LogicService
 
         foreach (var bandit in model.bandits.Values)
         {
-            Position banditToPlayer = model.player.pos - bandit.pos;
+            Vector banditToPlayer = model.player.pos - bandit.pos;
             bandit.dir = banditToPlayer.Normalize();
             bandit.pos += bandit.dir * bandit.speed;
             bandit.distance = banditToPlayer.Magnitude();
@@ -72,7 +72,7 @@ public static class LogicService
                 if (bandit != otherBandit)
                 {
                     float maxDistSq = (float)System.Math.Pow(bandit.radius + otherBandit.radius, 2);
-                    Position dir = bandit.pos - otherBandit.pos;
+                    Vector dir = bandit.pos - otherBandit.pos;
                     float distSq = dir.MagnitudeSq();
                     if (distSq < maxDistSq)
                     {
@@ -88,7 +88,7 @@ public static class LogicService
     {
         Bandit b = new Bandit();
         b.id = model.nextBanditId;
-        b.pos = new Position(UnityEngine.Random.insideUnitCircle.normalized * Config.SPAWN_RANGE);
+        b.pos = new Vector(UnityEngine.Random.insideUnitCircle.normalized * Config.SPAWN_RANGE);
         b.dir = (model.player.pos - b.pos).Normalize();
         model.bandits.Add(b.id, b);
 
@@ -110,8 +110,8 @@ public static class LogicService
 
             if (bulletViewportPos.x < 0 || bulletViewportPos.x > 1)
             {
-                bullet.dir = new Position(-bullet.dir.x, bullet.dir.y).Normalize();
-                bullet.pos = new Position(
+                bullet.dir = new Vector(-bullet.dir.x, bullet.dir.y).Normalize();
+                bullet.pos = new Vector(
                     cam.ViewportToWorldPoint(
                         new UnityEngine.Vector2(UnityEngine.Mathf.Clamp01(bulletViewportPos.x), bulletViewportPos.y)
                     )
@@ -122,8 +122,8 @@ public static class LogicService
             }
             if (bulletViewportPos.y < 0 || bulletViewportPos.y > 1)
             {
-                bullet.dir = new Position(bullet.dir.x, -bullet.dir.y).Normalize();
-                bullet.pos = new Position(
+                bullet.dir = new Vector(bullet.dir.x, -bullet.dir.y).Normalize();
+                bullet.pos = new Vector(
                     cam.ViewportToWorldPoint(
                         new UnityEngine.Vector2(bulletViewportPos.x, UnityEngine.Mathf.Clamp01(bulletViewportPos.y))
                     )
@@ -135,17 +135,17 @@ public static class LogicService
             foreach (var bandit in model.bandits.Values)
             {
                 Circle bulletCircle = CollisionService.CreateCircle(bullet.pos, bullet.dir * bullet.radius, bullet.radius);
-                Circle banditCircle = CollisionService.CreateCircle(bandit.pos, new Position(), bandit.radius);
+                Circle banditCircle = CollisionService.CreateCircle(bandit.pos, new Vector(), bandit.radius);
 
-                Position hitPoint;
+                Vector hitPoint;
                 if (CollisionService.DynamicToStaticCircleCollision(bulletCircle, banditCircle, out hitPoint))
                 {
                     model.gizmos.Add(hitPoint);
 
-                    Position delta = hitPoint - bandit.pos;
-                    Position normal = delta.Normalize();
+                    Vector delta = hitPoint - bandit.pos;
+                    Vector normal = delta.Normalize();
 
-                    Position pushDir = (bullet.dir * 0.5f + normal * 0.75f).Normalize();
+                    Vector pushDir = (bullet.dir * 0.5f + normal * 0.75f).Normalize();
 
 
                     bullet.pos = hitPoint;
@@ -171,7 +171,7 @@ public static class LogicService
         }
     }
 
-    public static void ShootBullet(World model, Position dir)
+    public static void ShootBullet(World model, Vector dir)
     {
         if (model.player.revolver.bullets > 0)
         {

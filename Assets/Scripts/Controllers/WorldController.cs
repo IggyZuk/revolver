@@ -4,7 +4,7 @@ using UnityEngine;
 public class WorldController : MonoBehaviour
 {
     World model;
-    WorldView view;
+    //WorldView view;
 
     InputController input = new InputController();
     InputController.InputModel inputModel;
@@ -13,7 +13,7 @@ public class WorldController : MonoBehaviour
     {
         model = new World();
 
-        view = ViewService.CreateWorldView();
+        //view = ViewService.CreateWorldView();
 
         inputModel = input.GetModel();
 
@@ -23,13 +23,14 @@ public class WorldController : MonoBehaviour
             {
                 if (inputModel.distance > 1f)
                 {
+                    Vector shootDir = input.GetShootDir();
+                    LogicService.ShootBullet(model, shootDir);
+
                     for (int i = 0; i < 5; i++)
                     {
-                        Position shootDir = input.GetShootDir();
-                        Position leftDir = (shootDir + Position.RotateLeft(shootDir) * Config.SPREAD).Normalize();
-                        Position rightDir = (shootDir + Position.RotateRight(shootDir) * Config.SPREAD).Normalize();
+                        Vector leftDir = (shootDir + Vector.RotateLeft(shootDir) * Config.SPREAD * i).Normalize();
+                        Vector rightDir = (shootDir + Vector.RotateRight(shootDir) * Config.SPREAD * i).Normalize();
 
-                        LogicService.ShootBullet(model, shootDir);
                         LogicService.ShootBullet(model, leftDir);
                         LogicService.ShootBullet(model, rightDir);
                     }
@@ -48,15 +49,15 @@ public class WorldController : MonoBehaviour
         {
             World clone = LogicService.CloneWorldWithoutBullets(model);
 
-            Position shootDir = input.GetShootDir();
-            Position leftDir = (shootDir + Position.RotateLeft(shootDir) * Config.SPREAD).Normalize();
-            Position rightDir = (shootDir + Position.RotateRight(shootDir) * Config.SPREAD).Normalize();
+            Vector shootDir = input.GetShootDir();
+            Vector leftDir = (shootDir + Vector.RotateLeft(shootDir) * Config.SPREAD).Normalize();
+            Vector rightDir = (shootDir + Vector.RotateRight(shootDir) * Config.SPREAD).Normalize();
 
             LogicService.ShootBullet(clone, shootDir);
             LogicService.ShootBullet(clone, leftDir);
             LogicService.ShootBullet(clone, rightDir);
 
-            List<Position> predictionPoints = new List<Position>();
+            List<Vector> predictionPoints = new List<Vector>();
             for (int i = 0; i < Config.PREDICTION_STEPS; i++)
             {
                 for (int j = 0; j < 1; j++)
@@ -70,21 +71,21 @@ public class WorldController : MonoBehaviour
                 }
             }
 
-            ViewService.DrawPredictionPoints(view, predictionPoints);
+            //ViewService.DrawPredictionPoints(view, predictionPoints);
 
-            var p1 = Camera.main.ScreenToWorldPoint(inputModel.startDragPos);
-            p1.y -= 0.5f;
-            var p2 = Camera.main.ScreenToWorldPoint(inputModel.currentDragPos);
-            p2.y -= 0.5f;
+            //var p1 = Camera.main.ScreenToWorldPoint(inputModel.startDragPos);
+            //p1.y -= 0.5f;
+            //var p2 = Camera.main.ScreenToWorldPoint(inputModel.currentDragPos);
+            //p2.y -= 0.5f;
 
-            ViewService.DrawInputUI(view, p1, p2);
+            //ViewService.DrawInputUI(view, p1, p2);
         }
     }
 
     void FixedUpdate()
     {
         LogicService.Tick(model);
-        ViewService.Tick(model, view);
+        //ViewService.Tick(model, view);
     }
 
     void OnGUI()

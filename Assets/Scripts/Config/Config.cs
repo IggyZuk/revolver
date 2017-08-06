@@ -7,7 +7,7 @@ public static class Config
     public const int PREDICTION_STEPS = 5;
 	public const float WIND_STRENGTH = 0f;
     public const float VIEW_LERP = 10f;
-    public const float SPREAD = 0.25f;
+    public const float SPREAD = 0.05f;
     public const float SPAWN_RANGE = 15f;
     public const float MIN_DISTANCE = 5f; 
 }

@@ -1,6 +1,6 @@
 public class Circle
 {
-    public Position pos = new Position();
-    public Position vel = new Position();
+    public Vector pos = new Vector();
+    public Vector vel = new Vector();
     public float radius = 1f;
 }

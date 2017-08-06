@@ -41,13 +41,13 @@ public class InputController
 		}
 	}
 
-	public Position GetShootDir()
+	public Vector GetShootDir()
 	{
 		Vector3 startPosWorld = Camera.main.ScreenToWorldPoint(inputModel.startDragPos);
 		Vector3 endPosWorld = Camera.main.ScreenToWorldPoint(inputModel.currentDragPos);
 
-		Position startPos = new Position(startPosWorld.x, startPosWorld.z);
-		Position endPos = new Position(endPosWorld.x, endPosWorld.z);
+		Vector startPos = new Vector(startPosWorld.x, startPosWorld.z);
+		Vector endPos = new Vector(endPosWorld.x, endPosWorld.z);
 
 		return (startPos - endPos).Normalize();
 	}

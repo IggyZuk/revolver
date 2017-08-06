@@ -12,7 +12,7 @@ public class World
     public int nextBulletId = 0;
     public int nextBanditSpawnTick = 0;
     public int bulletHitsScore = 0;
-    public List<Position> gizmos = new List<Position>();
-    public Position wind = new Position(0.01f, 0.01f);
+    public List<Vector> gizmos = new List<Vector>();
+    public Vector wind = new Vector(0.01f, 0.01f);
     public Queue<BaseEvent> events = new Queue<BaseEvent>();
 }
