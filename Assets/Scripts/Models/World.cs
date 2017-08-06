@@ -16,5 +16,5 @@ public class World
     public Vector wind = new Vector(0.01f, 0.01f);
     public Queue<BaseEvent> events = new Queue<BaseEvent>();
     public List<Vector> predictionPoints = new List<Vector>();
-    public float radius = Config.SPAWN_RANGE;
+    public Rectangle bounds = new Rectangle(-Config.SPAWN_RANGE, -Config.SPAWN_RANGE, Config.SPAWN_RANGE, Config.SPAWN_RANGE);
 }

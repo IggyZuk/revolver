@@ -6,7 +6,17 @@ public class GraphicsWorldView : MonoBehaviour
     {
         IMDraw.Axis3D(Vector3.zero, Quaternion.identity, 1000f, 0.1f);
         IMDraw.Grid3D(Vector3.zero, Quaternion.identity, 75f, 75f, 32, 32, new Color(1f, 1f, 1f, 0.5f));
-        GraphicsService.DrawDisk(Vector3.zero, model.radius, Color.white);
+        IMDraw.Bounds(
+            new Bounds(
+                new Vector3(0f, 0f),
+                new Vector3(
+                    Mathf.Abs(model.bounds.pos.x) + model.bounds.size.x,
+                    0f,
+                    Mathf.Abs(model.bounds.pos.y) + model.bounds.size.y
+                )
+            ),
+            Color.red
+        );
 
         foreach (var b in model.bandits.Values)
         {

@@ -57,6 +57,11 @@ public struct Vector
         return bNorm * Dot(a, bNorm);
     }
 
+    public static Vector Reflect(Vector a, Vector norm)
+    {
+        return -(Project(a, norm) * 2f - a).Normalize();
+    }
+
     public static Vector RotateLeft(Vector a)
     {
         return new Vector(-a.y, a.x);

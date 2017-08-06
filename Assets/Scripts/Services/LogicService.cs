@@ -108,20 +108,32 @@ public static class LogicService
             UnityEngine.Vector2 bulletViewportPos = cam.WorldToViewportPoint(bullet.pos.Vector3());
             UnityEngine.Vector3 bulletWorldPos = bullet.pos.Vector3();
 
-            if (bullet.pos.Magnitude() > model.radius)
+            if (bullet.pos.x < model.bounds.pos.x)
             {
-                Vector normal = -bullet.pos.Normalize();
-                Vector dir = bullet.dir;
-                Vector reflection = -(Vector.Project(dir, normal) * 2f + dir).Normalize();
-
-                bullet.dir = (reflection + new Vector(
-                    UnityEngine.Random.value * 0.5f,
-                    UnityEngine.Random.value * 0.5f)
-                 ).Normalize();
-
-                bullet.pos = bullet.pos.Normalize() * (model.radius - bullet.radius - 1f);
+                bullet.dir = Vector.Reflect(bullet.dir, new Vector(1f, 0f));
+                IMDraw.Line3D(bullet.pos.Vector3(), (bullet.pos + bullet.dir * 5f).Vector3(), UnityEngine.Color.white, 2f);
                 bullet.ricochetLifeHits--;
-
+                AudioController.Instance.PlaySound(AudioController.Sound.Ricoshet);
+            }
+            if (bullet.pos.y < model.bounds.pos.y)
+            {
+                bullet.dir = Vector.Reflect(bullet.dir, new Vector(0f, 1f));
+                IMDraw.Line3D(bullet.pos.Vector3(), (bullet.pos + bullet.dir * 5f).Vector3(), UnityEngine.Color.white, 2f);
+                bullet.ricochetLifeHits--;
+                AudioController.Instance.PlaySound(AudioController.Sound.Ricoshet);
+            }
+            if (bullet.pos.x > model.bounds.size.x)
+            {
+                bullet.dir = Vector.Reflect(bullet.dir, new Vector(-1f, 0f));
+                IMDraw.Line3D(bullet.pos.Vector3(), (bullet.pos + bullet.dir * 5f).Vector3(), UnityEngine.Color.white, 2f);
+                bullet.ricochetLifeHits--;
+                AudioController.Instance.PlaySound(AudioController.Sound.Ricoshet);
+            }
+            if (bullet.pos.y > model.bounds.size.x)
+            {
+                bullet.dir = Vector.Reflect(bullet.dir, new Vector(0f, -1f));
+                IMDraw.Line3D(bullet.pos.Vector3(), (bullet.pos + bullet.dir * 5f).Vector3(), UnityEngine.Color.white, 2f);
+                bullet.ricochetLifeHits--;
                 AudioController.Instance.PlaySound(AudioController.Sound.Ricoshet);
             }
 
