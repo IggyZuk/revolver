@@ -45,7 +45,7 @@ public class WorldController : MonoBehaviour
         DrawWorld();
         DrawBulletPrediction();
         DrawRevolverMagazine();
-        DrawInput();
+        //DrawInput();
     }
 
     void DrawWorld()
@@ -85,7 +85,7 @@ public class WorldController : MonoBehaviour
             input.GetShootDir()
         );
 
-        int steps = 25;
+        int steps = 127;
         for (int i = 0; i < steps; i++)
         {
             for (int j = 0; j < 1; j++)

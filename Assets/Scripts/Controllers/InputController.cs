@@ -28,7 +28,7 @@ public class InputController
 		else if (Input.GetMouseButtonUp(0))
 		{
 			inputModel.isDragging = false;
-			if (inputModel.shootAction != null) inputModel.shootAction(Input.mousePosition);
+			//if (inputModel.shootAction != null) inputModel.shootAction(Input.mousePosition);
 		}
 
 		if (inputModel.isDragging)
@@ -39,6 +39,26 @@ public class InputController
 			Vector3 endPosWorld = Camera.main.ScreenToWorldPoint(inputModel.currentDragPos);
 			inputModel.distance = (startPosWorld - endPosWorld).magnitude;
 		}
+
+        float speed = Input.GetKey(KeyCode.LeftShift) ? 1f : 0.01f;
+
+        if (Input.GetKey(KeyCode.LeftArrow))
+        { 
+            Vector2 v = (inputModel.currentDragPos - inputModel.startDragPos).normalized;
+            Vector2 n = new Vector2(-v.y, v.x) * speed;
+            inputModel.currentDragPos += n;
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            Vector2 v = (inputModel.currentDragPos - inputModel.startDragPos).normalized;
+            Vector2 n = new Vector2(v.y, -v.x) * speed;
+            inputModel.currentDragPos += n;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        { 
+            if (inputModel.shootAction != null) inputModel.shootAction(inputModel.currentDragPos);
+        }
 	}
 
 	public Position GetShootDir()
