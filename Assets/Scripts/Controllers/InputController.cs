@@ -28,7 +28,7 @@ public class InputController
 		else if (Input.GetMouseButtonUp(0))
 		{
 			inputModel.isDragging = false;
-			//if (inputModel.shootAction != null) inputModel.shootAction(Input.mousePosition);
+			if (inputModel.shootAction != null) inputModel.shootAction(Input.mousePosition);
 		}
 
 		if (inputModel.isDragging)

@@ -30,12 +30,13 @@ public class WorldController : MonoBehaviour
     void Update()
     {
         input.Update();
+        ViewService.Update(model, view);
+        ImmediateRenderer.Render(model, input);
     }
 
     void FixedUpdate()
     {
         LogicService.Tick(model);
-        ViewService.Update(model, view);
     }
 
     void OnDrawGizmos()
@@ -45,7 +46,7 @@ public class WorldController : MonoBehaviour
         DrawWorld();
         DrawBulletPrediction();
         DrawRevolverMagazine();
-        //DrawInput();
+        DrawInput();
     }
 
     void DrawWorld()
@@ -85,7 +86,7 @@ public class WorldController : MonoBehaviour
             input.GetShootDir()
         );
 
-        int steps = 127;
+        int steps = 16;
         for (int i = 0; i < steps; i++)
         {
             for (int j = 0; j < 1; j++)

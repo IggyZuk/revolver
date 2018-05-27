@@ -1,3 +1,3 @@
-﻿public class WorldView {
-
+﻿public class WorldView
+{
 }
